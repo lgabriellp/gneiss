@@ -2,6 +2,7 @@ import peewee
 import datetime
 import pystache
 import tempfile
+import flask
 
 db = peewee.SqliteDatabase("emulation.db")
 renderer = pystache.Renderer(search_dirs="templates")
@@ -18,17 +19,30 @@ class BaseModel(peewee.Model):
 
 class Emulation(BaseModel):
     number = peewee.IntegerField(primary_key=True)
+    duration = peewee.IntegerField()
+    interval = peewee.IntegerField()
+    density = peewee.IntegerField()
+    basestation_spot_number = peewee.IntegerField()
+    sensor_spot_number = peewee.IntegerField()
+    max_sensors_in_spot = peewee.IntegerField()
+    behavior = peewee.IntegerField(choices=(
+       (0, "Exponential"),
+       (1, "NodeDensity"),
+       (2, "Dummy"      )
+    ))
+    
+    class Meta:
+        indexes = ((("number", 
+                     "density",
+                     "basestation_spot_number",
+                     "sensor_spot_number",
+                     "max_sensors_in_spot",
+                     "behavior"), True),)
 
-class MidletClass(BaseModel):
-    path = peewee.CharField(unique=True)
-    type = peewee.CharField()
-
-    @property
-    def name(self):
-        return self.cls.path.split(".")[-1]
-
-class Midlet(MidletClass):
-    number = peewee.IntegerField()
+    def render_xml(self):
+        xml = render("emulation", self) 
+        print xml.read()
+        xml.close()
 
 
 class Spot(BaseModel):
@@ -72,10 +86,24 @@ class Spot(BaseModel):
     def behavior(self):
         return self.emulation.behavior
     
-    def render_manifest_mf(self):
+    def render_mf(self):
         manifest = render("manifest", self)
         print manifest.read()
         manifest.close()
+
+
+class MidletClass(BaseModel):
+    path = peewee.CharField(unique=True)
+    type = peewee.CharField()
+
+
+class Midlet(MidletClass):
+    spot = peewee.ForeignKeyField(Spot, related_name="midlets")
+    number = peewee.IntegerField()
+
+    @property
+    def name(self):
+        return self.path.split(".")[-1]
 
 class Round(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="rounds")
@@ -101,15 +129,23 @@ class Cycle(BaseModel):
 
 db.connect()
 
-def test_render():
-    e = Emulation.get(number=2)
-    s = Spot.get(emulation=e)
-    s.render_manifest_mf()
+def create():
+    with db.transaction():
+        Emulation.create_table()
+        MidletClass.create_table()
+        Midlet.create_table()
+        Spot.create_table()
+        Round.create_table()
+        Cycle.create_table()
+
+def drop():
+    with db.transaction():
+        Cycle.drop_table()
+        Round.drop_table()
+        Spot.drop_table()
+        Midlet.drop_table()
+        MidletClass.drop_table()
+        Emulation.drop_table()
 
 if __name__ == "__main__":
-    Emulation.create_table()
-    MidletClass.create_table()
-    Midlet.create_table()
-    Spot.create_table()
-    Round.create_table()
-    Cycle.create_table()
+    create()
