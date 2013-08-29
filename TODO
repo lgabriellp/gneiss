@@ -1,14 +1,28 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Renderizar manifest.mf a partir dos modelos
+  - Formatar applicação Flask
     @ Added [Qui 2013-08-29]
-    @ Start [Qui 2013-08-29] [13:47]
-  - Renderizar build.xml a partir dos models
+  - Formatar deploy sem uso do fabric
     @ Added [Qui 2013-08-29]
+  - Executar emulação
+    @ Added [Qui 2013-08-29]
+  - Identificar quando a emulação falhou precocemente
+    @ Added [Qui 2013-08-29]
+  - Plotar gráfico tempo de vida da rede
+    @ Added [Qui 2013-08-29]
+    - Mostrar informações da emulação
+      @ Added [Qui 2013-08-29]
+
 
 COMPLETED TASKS:
   - Criação dos modelos
+    @ Added [Qui 2013-08-29]
+    @ DONE [Qui 2013-08-29]
+  - Renderizar manifest.mf
+    @ Added [Qui 2013-08-29]
+    @ DONE [Qui 2013-08-29]
+  - Renderizar build.xml
     @ Added [Qui 2013-08-29]
     @ DONE [Qui 2013-08-29]
 
