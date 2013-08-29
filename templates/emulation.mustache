@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<virtual-config keep-addresses="false" run-midlets="true">
+    {{#virtual_spots}}
+    <virtual-spot>
+        <build file="{{build_file}}"/>
+        {{#midlets}}
+        <midlet name="{{path}}"/>
+        {{/midlets}}
+    </virtual-spot>
+    {{/virtual_spots}}
+</virtual-config>

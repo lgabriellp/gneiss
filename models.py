@@ -1,7 +1,16 @@
 import peewee
 import datetime
+import pystache
+import tempfile
 
 db = peewee.SqliteDatabase("emulation.db")
+renderer = pystache.Renderer(search_dirs="templates")
+
+def render(name, context):
+    rendered = tempfile.TemporaryFile("w+")
+    rendered.write(renderer.render_name(name, context))
+    rendered.seek(0)
+    return rendered
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -28,8 +37,8 @@ class Spot(BaseModel):
     position = peewee.IntegerField()
     
     type = peewee.CharField()
-    version = peewee.CharField()
-    vendor = peewee.CharField()
+    version = peewee.CharField(default="1.0.0")
+    vendor = peewee.CharField(default="DCC-UFRJ")
     
     class Meta:
         indexes = ((("emulation", "address", "position"), True),)
@@ -62,7 +71,11 @@ class Spot(BaseModel):
     @property
     def behavior(self):
         return self.emulation.behavior
-
+    
+    def render_manifest_mf(self):
+        manifest = render("manifest", self)
+        print manifest.read()
+        manifest.close()
 
 class Round(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="rounds")
@@ -86,9 +99,14 @@ class Cycle(BaseModel):
         indexes = ((("round", "number"), True),)
         order_by = ("round", "-number")
 
+db.connect()
+
+def test_render():
+    e = Emulation.get(number=2)
+    s = Spot.get(emulation=e)
+    s.render_manifest_mf()
+
 if __name__ == "__main__":
-    db.connect()
-    
     Emulation.create_table()
     MidletClass.create_table()
     Midlet.create_table()
