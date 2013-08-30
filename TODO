@@ -1,10 +1,8 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Emulações reais
+  - Saida por timeout
     @ Added [Sex 2013-08-30]
-    - Saida por timeout
-      @ Added [Sex 2013-08-30]
   - Processamento da saida do solarium
     @ Added [Sex 2013-08-30]
   - Regra de aplicação: Proximidade com o ponto de acesso
@@ -27,6 +25,9 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
 
 COMPLETED TASKS:
+  - Emulações reais
+    @ Added [Sex 2013-08-30]
+    @ DONE [Sex 2013-08-30]
   - Executar deploy sem uso do fabric
     @ Added [Qui 2013-08-29]
     @ DONE [Sex 2013-08-30]

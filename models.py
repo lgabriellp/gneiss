@@ -10,6 +10,8 @@ import tempfile
 import subprocess
 import threading
 
+from contextlib import nested, contextmanager
+
 db = peewee.SqliteDatabase("emulation.db")
 renderer = pystache.Renderer(search_dirs="templates")
 
@@ -26,11 +28,21 @@ def run(command, *args, **kwargs):
     return subprocess.call(command, shell=True)
 
 
+@contextmanager
 def start(command, *args, **kwargs):
     command = command.format(*args, **kwargs)
     print command
-    return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(command, shell=True, 
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
 
+    try:
+        yield process
+    except KeyboardInterrupt:
+        pass
+    finally:
+        process.terminate()
+    
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -41,7 +53,7 @@ class Emulation(BaseModel):
     number = peewee.IntegerField(primary_key=True)
     duration = peewee.IntegerField()
     interval = peewee.IntegerField()
-    density = peewee.IntegerField()
+    density = peewee.FloatField()
     basestation_spot_number = peewee.IntegerField()
     sensor_spot_number = peewee.IntegerField()
     max_sensors_in_spot = peewee.IntegerField()
@@ -75,6 +87,21 @@ class Emulation(BaseModel):
     def emulation_file(self):
         return "{e.path}/emulation.xml".format(e=self)
     
+    def add_spots(self):
+        base_address = 1
+        for i in xrange(self.sensor_spot_number):
+            spot = Spot.create(emulation=self,
+                               address=base_address+i,
+                               position=random.randint(0, 100))
+            spot.add_midlets(MidletClass.type=="sensor")
+
+        base_address += self.sensor_spot_number
+        for i in xrange(self.basestation_spot_number):
+            spot = Spot.create(emulation=self,
+                               address=base_address+i,
+                               position=0)
+            spot.add_midlets(MidletClass.type=="basestation")
+
     def cleanup(self):
         run("rm -rf {e.path}", e=self)
 
@@ -100,17 +127,16 @@ class Spot(BaseModel):
     address = peewee.IntegerField()
     position = peewee.IntegerField()
     
-    type = peewee.CharField()
     version = peewee.CharField(default="1.0.0")
     vendor = peewee.CharField(default="DCC-UFRJ")
     
     class Meta:
         indexes = ((("emulation", "address", "position"), True),)
-        order_by = ("emulation", "-address")
+        order_by = ("emulation", "address")
 
     @property
     def name(self):
-        return "{s.type}-{s.address}".format(s=self)
+        return "spot-{s.address}".format(s=self)
 
     @property
     def build_file(self):
@@ -132,19 +158,35 @@ class Spot(BaseModel):
     def behavior(self):
         return self.emulation.behavior
 
+    def add_midlets(self, *filters):
+        number = random.randint(1, self.emulation.max_sensors_in_spot)
+        classes = random.sample(list(MidletClass.select().where(*filters)), number)
+
+        for i in xrange(number):
+            Midlet.create(clas=classes[i], spot=self, number=i+1)
 
 class MidletClass(BaseModel):
+    id = peewee.PrimaryKeyField()
     path = peewee.CharField(unique=True)
     type = peewee.CharField()
 
 
-class Midlet(MidletClass):
+class Midlet(BaseModel):
+    clas = peewee.ForeignKeyField(MidletClass)
     spot = peewee.ForeignKeyField(Spot, related_name="midlets")
     number = peewee.IntegerField()
+    
+    class Meta:
+        indexes = ((("spot", "number"), True),)
+        order_by = ("spot", "number")
+    
+    @property
+    def path(self):
+        return self.clas.path
 
     @property
     def name(self):
-        return self.path.split(".")[-1]
+        return self.clas.path.split(".")[-1]
 
 
 class Round(BaseModel):
@@ -157,25 +199,27 @@ class Round(BaseModel):
         indexes = ((("emulation", "number", "date"), True),)
         order_by = ("emulation", "-number")
 
+    def parse(self, output):
+        while True:
+            time.sleep(.01)
+            line = output.readline()
+            print line,
+            if "Failed" in line:
+                break
+        
+        print output.read()
+        time.sleep(2)
+
     def run(self):
         random.seed(self.seed)
         
         os.environ["LD_LIBRARY_PATH"] = "/usr/lib/jvm/default-java/jre/lib/i386/client"
         os.environ["DISPLAY"] = ":1"
 
-        screen = start("Xvfb :1")
-        solarium = start("ant solarium -f {e.build_file} -Dconfig.file={e.emulation_file}",
-                         e=self.emulation)
-        while True:
-            time.sleep(.01)
-            line = solarium.stdout.readline()
-            
-            if "Failed" in line:
-                break
-
-        time.sleep(2)
-        solarium.terminate()
-        screen.terminate()
+        with start("Xvfb :1"):
+            with start("ant solarium -f {e.build_file} -Dconfig.file={e.emulation_file}",
+                          e=self.emulation) as solarium:
+                self.parse(solarium.stdout)
 
 
 class Cycle(BaseModel):

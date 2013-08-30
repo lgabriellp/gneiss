@@ -3,6 +3,9 @@ from models import *
 
 @nose.with_setup(create, drop)
 def test_render():
+    MidletClass.create(path="br.ufrj.dcc.wsn.main.HeatSensorNode", type="sensor")
+    MidletClass.create(path="br.ufrj.dcc.wsn.main.BaseStation", type="basestation")
+
     e = Emulation.create(
             number=2,
             duration=60,
@@ -12,22 +15,7 @@ def test_render():
             sensor_spot_number=10,
             max_sensors_in_spot=1,
             behavior=0)
-
-    s = Spot.create(
-            emulation=e,
-            address=1,
-            position=0,
-            type="sensor")
-
-    Midlet.create(spot=s,
-            number=1,
-            path="asd.Asd",
-            type="sensor")
-    m = Midlet.create(spot=s,
-            number=2,
-            path="qwe.Qwe",
-            type="sensor")
-
+    e.add_spots()
     e.deploy("/home/lgabriel/Workspace/Rossan/")
     e.run()
 
