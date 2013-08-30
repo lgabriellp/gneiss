@@ -3,19 +3,36 @@ import datetime
 import pystache
 import tempfile
 import flask
+import subprocess
+
 
 db = peewee.SqliteDatabase("emulation.db")
 renderer = pystache.Renderer(search_dirs="templates")
 
-def render(name, context):
-    rendered = tempfile.TemporaryFile("w+")
+
+def render(name, path, context):
+    rendered = open(path, "w")
     rendered.write(renderer.render_name(name, context))
-    rendered.seek(0)
-    return rendered
+    rendered.close()
+
+
+def run(command, *args, **kwargs):
+    command = command.format(*args, **kwargs)
+    print command
+    return subprocess.call(command, shell=True, bufsize=4096)
+
+
+def start(command, *args, **kwargs):
+    command = command.format(*args, **kwargs)
+    print command
+    return subprocess.Popen(command, shell=True, bufsize=4096,
+                            stdout=subprocess.PIPE)
+
 
 class BaseModel(peewee.Model):
     class Meta:
         database = db
+
 
 class Emulation(BaseModel):
     number = peewee.IntegerField(primary_key=True)
@@ -39,12 +56,31 @@ class Emulation(BaseModel):
                      "max_sensors_in_spot",
                      "behavior"), True),)
 
-    def render_xml(self):
-        xml = render("emulation", self) 
-        print xml.read()
-        xml.close()
+    @property
+    def name(self):
+        return "emulation-{s.number}".format(s=self)
 
+    @property
+    def path(self):
+        return "/tmp/{s.name}".format(s=self)
 
+    @property
+    def emulation_path(self):
+        return self.path + "emulation.xml"
+
+    def deploy(self, project):
+        run("mkdir {e.path} -p", e=self)
+        run("tar -C {e.path} -Pczf {e.path}/repo.tgz --exclude='\.*' --transform='s,{0},repo/,' {0}", project, e=self)
+        run("tar -C {e.path} -Pxzf {e.path}/repo.tgz", e=self)
+        run("cp {e.path}/repo/build.xml {e.path}", e=self)
+        run("cp {e.path}/repo/solarium.sh {e.path}", e=self)
+        render("emulation", self.emulation_path, self)
+        
+        for spot in self.spots:
+            run("cp -r {e.path}/repo {e.path}/{s.name}", e=self, s=spot)
+            render("manifest", spot.manifest_path, spot)
+
+    
 class Spot(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="spots")
     address = peewee.IntegerField()
@@ -63,16 +99,12 @@ class Spot(BaseModel):
         return "{s.type}-{s.address}".format(s=self)
 
     @property
-    def path(self):
-        return self.name
-
-    @property
     def build_file(self):
-        return "{s.path}/build.xml".format(s=self)
+        return "{s.name}/build.xml".format(s=self)
 
     @property
-    def manifest_file(self):
-        return "{s.path}/resources/META-INF/manifest.mf".format(s=self)
+    def manifest_path(self):
+        return "{s.emulation.path}/{s.name}/resources/META-INF/manifest.mf".format(s=self)
     
     @property
     def interval(self):
@@ -105,6 +137,7 @@ class Midlet(MidletClass):
     def name(self):
         return self.path.split(".")[-1]
 
+
 class Round(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="rounds")
     number = peewee.IntegerField()
@@ -127,7 +160,9 @@ class Cycle(BaseModel):
         indexes = ((("round", "number"), True),)
         order_by = ("round", "-number")
 
+
 db.connect()
+
 
 def create():
     with db.transaction():
@@ -138,6 +173,7 @@ def create():
         Round.create_table()
         Cycle.create_table()
 
+
 def drop():
     with db.transaction():
         Cycle.drop_table()
@@ -146,6 +182,7 @@ def drop():
         Midlet.drop_table()
         MidletClass.drop_table()
         Emulation.drop_table()
+
 
 if __name__ == "__main__":
     create()

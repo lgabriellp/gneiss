@@ -12,7 +12,7 @@ def test_render():
             sensor_spot_number=10,
             max_sensors_in_spot=1,
             behavior=0)
-    
+
     s = Spot.create(
             emulation=e,
             address=1,
@@ -27,8 +27,7 @@ def test_render():
             number=2,
             path="qwe.Qwe",
             type="sensor")
-    print m.name
-    e.render_xml()
-    s.render_mf()
+
+    e.deploy("/home/lgabriel/Workspace/Rossan/")
 
 
