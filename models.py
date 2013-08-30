@@ -1,10 +1,14 @@
+import os
+import sys
+import time
+import flask
 import peewee
+import random
 import datetime
 import pystache
 import tempfile
-import flask
 import subprocess
-
+import threading
 
 db = peewee.SqliteDatabase("emulation.db")
 renderer = pystache.Renderer(search_dirs="templates")
@@ -19,14 +23,13 @@ def render(name, path, context):
 def run(command, *args, **kwargs):
     command = command.format(*args, **kwargs)
     print command
-    return subprocess.call(command, shell=True, bufsize=4096)
+    return subprocess.call(command, shell=True)
 
 
 def start(command, *args, **kwargs):
     command = command.format(*args, **kwargs)
     print command
-    return subprocess.Popen(command, shell=True, bufsize=4096,
-                            stdout=subprocess.PIPE)
+    return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 
 
 class BaseModel(peewee.Model):
@@ -63,23 +66,34 @@ class Emulation(BaseModel):
     @property
     def path(self):
         return "/tmp/{s.name}".format(s=self)
+    
+    @property
+    def build_file(self):
+        return "{e.path}/build.xml".format(e=self)
 
     @property
-    def emulation_path(self):
-        return self.path + "emulation.xml"
+    def emulation_file(self):
+        return "{e.path}/emulation.xml".format(e=self)
+    
+    def cleanup(self):
+        run("rm -rf {e.path}", e=self)
 
     def deploy(self, project):
+        self.cleanup()
+
         run("mkdir {e.path} -p", e=self)
         run("tar -C {e.path} -Pczf {e.path}/repo.tgz --exclude='\.*' --transform='s,{0},repo/,' {0}", project, e=self)
         run("tar -C {e.path} -Pxzf {e.path}/repo.tgz", e=self)
         run("cp {e.path}/repo/build.xml {e.path}", e=self)
-        run("cp {e.path}/repo/solarium.sh {e.path}", e=self)
-        render("emulation", self.emulation_path, self)
+        render("emulation", self.emulation_file, self)
         
         for spot in self.spots:
             run("cp -r {e.path}/repo {e.path}/{s.name}", e=self, s=spot)
-            render("manifest", spot.manifest_path, spot)
+            render("manifest", spot.manifest_file, spot)
 
+    def run(self):
+        round = Round.create(emulation=self, number=1)
+        round.run()
     
 class Spot(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="spots")
@@ -103,7 +117,7 @@ class Spot(BaseModel):
         return "{s.name}/build.xml".format(s=self)
 
     @property
-    def manifest_path(self):
+    def manifest_file(self):
         return "{s.emulation.path}/{s.name}/resources/META-INF/manifest.mf".format(s=self)
     
     @property
@@ -117,11 +131,6 @@ class Spot(BaseModel):
     @property
     def behavior(self):
         return self.emulation.behavior
-    
-    def render_mf(self):
-        manifest = render("manifest", self)
-        print manifest.read()
-        manifest.close()
 
 
 class MidletClass(BaseModel):
@@ -140,13 +149,33 @@ class Midlet(MidletClass):
 
 class Round(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="rounds")
-    number = peewee.IntegerField()
-    seed = peewee.IntegerField()
+    seed = peewee.IntegerField(default=lambda:random.randint(0, sys.maxint))
     date = peewee.DateTimeField(default=datetime.datetime.now)
+    number = peewee.IntegerField()
 
     class Meta:
         indexes = ((("emulation", "number", "date"), True),)
         order_by = ("emulation", "-number")
+
+    def run(self):
+        random.seed(self.seed)
+        
+        os.environ["LD_LIBRARY_PATH"] = "/usr/lib/jvm/default-java/jre/lib/i386/client"
+        os.environ["DISPLAY"] = ":1"
+
+        screen = start("Xvfb :1")
+        solarium = start("ant solarium -f {e.build_file} -Dconfig.file={e.emulation_file}",
+                         e=self.emulation)
+        while True:
+            time.sleep(.01)
+            line = solarium.stdout.readline()
+            
+            if "Failed" in line:
+                break
+
+        time.sleep(2)
+        solarium.terminate()
+        screen.terminate()
 
 
 class Cycle(BaseModel):

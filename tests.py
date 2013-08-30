@@ -29,5 +29,6 @@ def test_render():
             type="sensor")
 
     e.deploy("/home/lgabriel/Workspace/Rossan/")
+    e.run()
 
 
