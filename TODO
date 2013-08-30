@@ -1,16 +1,24 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Executar emulação com Popen
+  - Emulações reais
+    @ Added [Sex 2013-08-30]
+  - Processamento da saida do solarium
+    @ Added [Sex 2013-08-30]
+  - Regra de aplicação: Proximidade com o ponto de acesso
+    @ Added [Sex 2013-08-30]
+  - Gráfico tempo de vida da rede
     @ Added [Qui 2013-08-29]
-  - Formatar applicação Flask
-    @ Added [Qui 2013-08-29]
-  - Identificar quando a emulação falhou precocemente
-    @ Added [Qui 2013-08-29]
-  - Plotar gráfico tempo de vida da rede
-    @ Added [Qui 2013-08-29]
-    - Mostrar informações da emulação
+    - Applicação Flask
       @ Added [Qui 2013-08-29]
+    - Exibição de informações da emulação
+      @ Added [Qui 2013-08-29]
+  - Monitoração ativa do nó pai
+    @ Added [Sex 2013-08-30]
+  - Medir taxa de entrega fim a fim
+    @ Added [Sex 2013-08-30]
+  - Medir latência fim a fim
+    @ Added [Sex 2013-08-30]
 
 COMPLETED TASKS:
   - Executar deploy sem uso do fabric
@@ -25,5 +33,11 @@ COMPLETED TASKS:
   - Renderizar build.xml
     @ Added [Qui 2013-08-29]
     @ DONE [Qui 2013-08-29]
+  - Executar emulação com Popen
+    @ Added [Qui 2013-08-29]
+    @ DONE [Sex 2013-08-30]
+  - Identificar quando a emulação falhou precocemente
+    @ Added [Qui 2013-08-29]
+    @ DONE [Sex 2013-08-30]
 
 # vim:ft=quicktask
