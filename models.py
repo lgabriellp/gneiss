@@ -1,48 +1,14 @@
-import os
 import sys
 import time
 import flask
 import peewee
 import random
 import datetime
-import pystache
-import tempfile
-import subprocess
 import threading
 
-from contextlib import nested, contextmanager
+import util
 
 db = peewee.SqliteDatabase("emulation.db")
-renderer = pystache.Renderer(search_dirs="templates")
-
-
-def render(name, path, context):
-    rendered = open(path, "w")
-    rendered.write(renderer.render_name(name, context))
-    rendered.close()
-
-
-def run(command, *args, **kwargs):
-    command = command.format(*args, **kwargs)
-    print command
-    return subprocess.call(command, shell=True)
-
-
-@contextmanager
-def start(command, *args, **kwargs):
-    command = command.format(*args, **kwargs)
-    print command
-    process = subprocess.Popen(command, shell=True, 
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-
-    try:
-        yield process
-    except KeyboardInterrupt:
-        pass
-    finally:
-        process.terminate()
-    
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -103,20 +69,20 @@ class Emulation(BaseModel):
             spot.add_midlets(MidletClass.type=="basestation")
 
     def cleanup(self):
-        run("rm -rf {e.path}", e=self)
+        util.run("rm -rf {e.path}", e=self)
 
     def deploy(self, project):
         self.cleanup()
 
-        run("mkdir {e.path} -p", e=self)
-        run("tar -C {e.path} -Pczf {e.path}/repo.tgz --exclude='\.*' --transform='s,{0},repo/,' {0}", project, e=self)
-        run("tar -C {e.path} -Pxzf {e.path}/repo.tgz", e=self)
-        run("cp {e.path}/repo/build.xml {e.path}", e=self)
-        render("emulation", self.emulation_file, self)
+        util.run("mkdir {e.path} -p", e=self)
+        util.run("tar -C {e.path} -Pczf {e.path}/repo.tgz --exclude='\.*' --transform='s,{0},repo/,' {0}", project, e=self)
+        util.run("tar -C {e.path} -Pxzf {e.path}/repo.tgz", e=self)
+        util.run("cp {e.path}/repo/build.xml {e.path}", e=self)
+        util.render("emulation", self.emulation_file, self)
         
         for spot in self.spots:
-            run("cp -r {e.path}/repo {e.path}/{s.name}", e=self, s=spot)
-            render("manifest", spot.manifest_file, spot)
+            util.run("cp -r {e.path}/repo {e.path}/{s.name}", e=self, s=spot)
+            util.render("manifest", spot.manifest_file, spot)
 
     def run(self):
         round = Round.create(emulation=self, number=1)
@@ -201,25 +167,19 @@ class Round(BaseModel):
 
     def parse(self, output):
         while True:
-            time.sleep(.01)
             line = output.readline()
-            print line,
+            if line: print line,
+            else: break
+            
             if "Failed" in line:
+                print output.read()
                 break
-        
-        print output.read()
-        time.sleep(2)
 
     def run(self):
         random.seed(self.seed)
-        
-        os.environ["LD_LIBRARY_PATH"] = "/usr/lib/jvm/default-java/jre/lib/i386/client"
-        os.environ["DISPLAY"] = ":1"
 
-        with start("Xvfb :1"):
-            with start("ant solarium -f {e.build_file} -Dconfig.file={e.emulation_file}",
-                          e=self.emulation) as solarium:
-                self.parse(solarium.stdout)
+        with util.solarium(self.emulation) as solarium:
+            self.parse(solarium.stdout)
 
 
 class Cycle(BaseModel):

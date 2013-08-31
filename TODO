@@ -1,8 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Saida por timeout
-    @ Added [Sex 2013-08-30]
   - Processamento da saida do solarium
     @ Added [Sex 2013-08-30]
   - Regra de aplicação: Proximidade com o ponto de acesso
@@ -25,12 +23,6 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
 
 COMPLETED TASKS:
-  - Emulações reais
-    @ Added [Sex 2013-08-30]
-    @ DONE [Sex 2013-08-30]
-  - Executar deploy sem uso do fabric
-    @ Added [Qui 2013-08-29]
-    @ DONE [Sex 2013-08-30]
   - Criação dos modelos
     @ Added [Qui 2013-08-29]
     @ DONE [Qui 2013-08-29]
@@ -45,6 +37,15 @@ COMPLETED TASKS:
     @ DONE [Sex 2013-08-30]
   - Identificar quando a emulação falhou precocemente
     @ Added [Qui 2013-08-29]
+    @ DONE [Sex 2013-08-30]
+  - Executar deploy sem uso do fabric
+    @ Added [Qui 2013-08-29]
+    @ DONE [Sex 2013-08-30]
+  - Emulações reais
+    @ Added [Sex 2013-08-30]
+    @ DONE [Sex 2013-08-30]
+  - Saida por timeout
+    @ Added [Sex 2013-08-30]
     @ DONE [Sex 2013-08-30]
 
 # vim:ft=quicktask

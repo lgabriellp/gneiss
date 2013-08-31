@@ -8,8 +8,8 @@ def test_render():
 
     e = Emulation.create(
             number=2,
-            duration=60,
-            interval=50,
+            duration=5,
+            interval=250,
             density=.3,
             basestation_spot_number=1,
             sensor_spot_number=10,
