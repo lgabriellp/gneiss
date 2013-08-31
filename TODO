@@ -5,21 +5,31 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - Regra de aplicação: Proximidade com o ponto de acesso
     @ Added [Sex 2013-08-30]
-  - Documentação do código
-    @ Added [Sex 2013-08-30]
-  - Projeto no github
-    @ Added [Sex 2013-08-30]
   - Gráfico tempo de vida da rede
     @ Added [Qui 2013-08-29]
+    - Exibir gasto médio, máximo e mínimo de energia
+      @ Added [Sex 2013-08-30]
     - Applicação Flask
       @ Added [Qui 2013-08-29]
     - Exibição de informações da emulação
       @ Added [Qui 2013-08-29]
   - Monitoração ativa do nó pai
     @ Added [Sex 2013-08-30]
+  - Simular Perda de pacotes
+    @ Added [Sex 2013-08-30]
   - Medir taxa de entrega fim a fim
     @ Added [Sex 2013-08-30]
+  - Simular atraso na rede
+    @ Added [Sex 2013-08-30]
   - Medir latência fim a fim
+    @ Added [Sex 2013-08-30]
+  - Documentação do código
+    @ Added [Sex 2013-08-30]
+  - requirements.txt
+    @ Added [Sex 2013-08-30]
+  - Remover modelos específicos do projeto Rossan
+    @ Added [Sex 2013-08-30]
+  - Distribuição fácil (pip)
     @ Added [Sex 2013-08-30]
 
 COMPLETED TASKS:
@@ -40,6 +50,9 @@ COMPLETED TASKS:
     @ DONE [Sex 2013-08-30]
   - Executar deploy sem uso do fabric
     @ Added [Qui 2013-08-29]
+    @ DONE [Sex 2013-08-30]
+  - Projeto no github
+    @ Added [Sex 2013-08-30]
     @ DONE [Sex 2013-08-30]
   - Emulações reais
     @ Added [Sex 2013-08-30]
