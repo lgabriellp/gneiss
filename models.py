@@ -185,9 +185,6 @@ class Round(BaseModel):
         except Cycle.DoesNotExist:
             cycle = (Cycle.create(round=self, number=row["cycle"]))
 
-        sample_args = [SampledSpotCycle.cycle == cycle,
-                       SampledSpotCycle.spot == row["address"]]
-
         try:
             sample = (SampledSpotCycle.select()
                       .where(SampledSpotCycle.cycle == cycle,
@@ -263,6 +260,7 @@ class SampledSpotCycle(BaseModel):
     cycle = peewee.ForeignKeyField(Cycle, related_name="samples")
     spot = peewee.ForeignKeyField(Spot, related_name="samples")
     parent = peewee.ForeignKeyField(Spot, null=True)
+    coord = peewee.BooleanField()
     energy = peewee.FloatField()
     time = peewee.FloatField()
     hops = peewee.FloatField()
