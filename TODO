@@ -5,6 +5,8 @@ CURRENT TASKS:
     @ Added [Qui 2013-08-29]
     - Applicação Flask
       @ Added [Qui 2013-08-29]
+      - Configuração de banco variando entre real/teste
+        @ Added [Dom 2013-09-01]
     - Exibir gasto médio, máximo e mínimo de energia
       @ Added [Sex 2013-08-30]
     - Exibição de informações da emulação
