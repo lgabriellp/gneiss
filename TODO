@@ -3,14 +3,12 @@
 CURRENT TASKS:
   - Gráfico tempo de vida da rede
     @ Added [Qui 2013-08-29]
-    - Applicação Flask
-      @ Added [Qui 2013-08-29]
-      - Configuração de banco variando entre real/teste
-        @ Added [Dom 2013-09-01]
-    - Exibir gasto médio, máximo e mínimo de energia
-      @ Added [Sex 2013-08-30]
-    - Exibição de informações da emulação
-      @ Added [Qui 2013-08-29]
+  - Verificar execução de testes com banco em memória
+    @ Added [Dom 2013-09-01]
+  - Exibir gasto médio, máximo e mínimo de energia
+    @ Added [Sex 2013-08-30]
+  - Exibição de informações da emulação
+    @ Added [Qui 2013-08-29]
   - Regra de aplicação: Proximidade com o ponto de acesso
     @ Added [Sex 2013-08-30]
   - Execução de múltiplas rodadas
@@ -41,6 +39,12 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
 
 COMPLETED TASKS:
+  - Applicação Flask
+    @ Added [Qui 2013-08-29]
+    @ DONE [Dom 2013-09-01]
+  - Configuração de banco variando entre real/teste
+    @ Added [Dom 2013-09-01]
+    @ DONE [Dom 2013-09-01]
   - Processamento da saida do solarium
     @ Added [Sex 2013-08-30]
     @ DONE [Dom 2013-09-01]

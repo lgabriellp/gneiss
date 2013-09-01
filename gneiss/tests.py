@@ -1,12 +1,17 @@
-import unittest
+from unittest import TestCase
 
 from peewee import fn
 
-import models
-from models import Cycle, MidletClass, Emulation, Round, SampledSpotCycle, Spot
+from gneiss import App
+from gneiss import models
+from gneiss.models import Cycle, MidletClass, Emulation, Round
+from gneiss.models import SampledSpotCycle, Spot
 
 
-class EmulationTest(unittest.TestCase):
+class EmulationTest(TestCase):
+    def create_app(self):
+        return App("gneiss.config.DebugConfig")
+
     def setUp(self):
         models.create()
         MidletClass.create(path="br.ufrj.dcc.wsn.main.HeatSensorNode",

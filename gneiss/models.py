@@ -4,18 +4,12 @@ import peewee
 import random
 import datetime
 
-import util
+import peewee
+
+from gneiss import db, util
 
 
-db = peewee.SqliteDatabase(":memory:")
-
-
-class BaseModel(peewee.Model):
-    class Meta:
-        database = db
-
-
-class Emulation(BaseModel):
+class Emulation(db.Model):
     number = peewee.IntegerField(primary_key=True)
     duration = peewee.IntegerField()
     interval = peewee.IntegerField()
@@ -91,7 +85,7 @@ class Emulation(BaseModel):
         round.run()
 
 
-class Spot(BaseModel):
+class Spot(db.Model):
     emulation = peewee.ForeignKeyField(Emulation, related_name="spots")
     address = peewee.IntegerField()
     position = peewee.IntegerField()
@@ -140,13 +134,13 @@ class Spot(BaseModel):
             Midlet.create(clas=classes[i], spot=self, number=i + 1)
 
 
-class MidletClass(BaseModel):
+class MidletClass(db.Model):
     id = peewee.PrimaryKeyField()
     path = peewee.CharField(unique=True)
     type = peewee.CharField()
 
 
-class Midlet(BaseModel):
+class Midlet(db.Model):
     clas = peewee.ForeignKeyField(MidletClass)
     spot = peewee.ForeignKeyField(Spot, related_name="midlets")
     number = peewee.IntegerField()
@@ -164,7 +158,7 @@ class Midlet(BaseModel):
         return self.clas.path.split(".")[-1]
 
 
-class Round(BaseModel):
+class Round(db.Model):
     emulation = peewee.ForeignKeyField(Emulation, related_name="rounds")
     seed = peewee.IntegerField(default=lambda: random.randint(0, sys.maxint))
     date = peewee.DateTimeField(default=datetime.datetime.now)
@@ -237,7 +231,7 @@ class Round(BaseModel):
             self.parse(solarium.stdout)
 
 
-class Cycle(BaseModel):
+class Cycle(db.Model):
     round = peewee.ForeignKeyField(Round, related_name="cycles")
     number = peewee.IntegerField()
 
@@ -256,7 +250,7 @@ class Cycle(BaseModel):
         return row
 
 
-class SampledSpotCycle(BaseModel):
+class SampledSpotCycle(db.Model):
     cycle = peewee.ForeignKeyField(Cycle, related_name="samples")
     spot = peewee.ForeignKeyField(Spot, related_name="samples")
     parent = peewee.ForeignKeyField(Spot, null=True)
@@ -267,27 +261,24 @@ class SampledSpotCycle(BaseModel):
 
 
 def create():
-    with db.transaction():
-        Emulation.create_table()
-        MidletClass.create_table()
-        Midlet.create_table()
-        Spot.create_table()
-        Round.create_table()
-        Cycle.create_table()
-        SampledSpotCycle.create_table()
+    Emulation.create_table()
+    MidletClass.create_table()
+    Midlet.create_table()
+    Spot.create_table()
+    Round.create_table()
+    Cycle.create_table()
+    SampledSpotCycle.create_table()
 
 
 def drop():
-    with db.transaction():
-        SampledSpotCycle.drop_table()
-        Cycle.drop_table()
-        Round.drop_table()
-        Spot.drop_table()
-        Midlet.drop_table()
-        MidletClass.drop_table()
-        Emulation.drop_table()
+    SampledSpotCycle.drop_table()
+    Cycle.drop_table()
+    Round.drop_table()
+    Spot.drop_table()
+    Midlet.drop_table()
+    MidletClass.drop_table()
+    Emulation.drop_table()
 
-db.connect()
 
 if __name__ == "__main__":
     create()
