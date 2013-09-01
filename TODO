@@ -1,8 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Processamento da saida do solarium
-    @ Added [Sex 2013-08-30]
   - Caminho do projeto em MidletClass
     @ Added [Sáb 2013-08-31]
   - Regra de aplicação: Proximidade com o ponto de acesso
@@ -29,12 +27,17 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - requirements.txt
     @ Added [Sex 2013-08-30]
+  - Refactor da função util.solarium
+    @ Added [Dom 2013-09-01]
   - Remover modelos específicos do projeto Rossan
     @ Added [Sex 2013-08-30]
   - Distribuição fácil (pip)
     @ Added [Sex 2013-08-30]
 
 COMPLETED TASKS:
+  - Processamento da saida do solarium
+    @ Added [Sex 2013-08-30]
+    @ DONE [Dom 2013-09-01]
   - Criação dos modelos
     @ Added [Qui 2013-08-29]
     @ DONE [Qui 2013-08-29]
