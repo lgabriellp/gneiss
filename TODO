@@ -1,20 +1,22 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Caminho do projeto em MidletClass
-    @ Added [Sáb 2013-08-31]
-  - Regra de aplicação: Proximidade com o ponto de acesso
-    @ Added [Sex 2013-08-30]
   - Gráfico tempo de vida da rede
     @ Added [Qui 2013-08-29]
-    - Exibir gasto médio, máximo e mínimo de energia
-      @ Added [Sex 2013-08-30]
     - Applicação Flask
       @ Added [Qui 2013-08-29]
+    - Exibir gasto médio, máximo e mínimo de energia
+      @ Added [Sex 2013-08-30]
     - Exibição de informações da emulação
       @ Added [Qui 2013-08-29]
+  - Regra de aplicação: Proximidade com o ponto de acesso
+    @ Added [Sex 2013-08-30]
+  - Execução de múltiplas rodadas
+    @ Added [Dom 2013-09-01]
   - Monitoração ativa do nó pai
     @ Added [Sex 2013-08-30]
+  - Calculo de intervalos de confiança
+    @ Added [Dom 2013-09-01]
   - Simular Perda de pacotes
     @ Added [Sex 2013-08-30]
   - Medir taxa de entrega fim a fim
@@ -27,6 +29,8 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - requirements.txt
     @ Added [Sex 2013-08-30]
+  - Caminho do projeto em MidletClass
+    @ Added [Sáb 2013-08-31]
   - Refactor da função util.solarium
     @ Added [Dom 2013-09-01]
   - Remover modelos específicos do projeto Rossan
