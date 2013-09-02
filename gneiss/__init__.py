@@ -8,7 +8,7 @@ def App(filename):
     return application
 
 
-app = App("gneiss.config.ProductionConfig")
+app = App("gneiss.config.DebugConfig")
 db = Database(app)
 
 import gneiss.models

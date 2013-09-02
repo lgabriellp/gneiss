@@ -1,7 +1,9 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Gráfico tempo de vida da rede
+ - Path de templates independente do path do executável
+   @ Added [Seg 2013-09-02]
+ - Gráfico tempo de vida da rede
     @ Added [Qui 2013-08-29]
   - Verificar execução de testes com banco em memória
     @ Added [Dom 2013-09-01]
@@ -37,6 +39,7 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - Distribuição fácil (pip)
     @ Added [Sex 2013-08-30]
+
 
 COMPLETED TASKS:
   - Applicação Flask

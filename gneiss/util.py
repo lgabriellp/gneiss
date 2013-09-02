@@ -5,7 +5,7 @@ import threading
 from contextlib import contextmanager
 
 
-renderer = pystache.Renderer(search_dirs="templates")
+renderer = pystache.Renderer(search_dirs="gneiss/templates")
 
 
 def render(name, path, context):
