@@ -1,18 +1,22 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+  - Exibir gasto médio, máximo e mínimo de energia
+    @ Added [Sex 2013-08-30]
+  - Exibir gasto médio, máximo e mínimo de tempo
+    @ Added [Seg 2013-09-02]
+  - Exibir número de hops médio e máximo
+    @ Added [Seg 2013-09-02]
+  - Execução de múltiplas rodadas
+    @ Added [Dom 2013-09-01]
   - Gráfico tempo de vida da rede
     @ Added [Qui 2013-08-29]
   - Verificar execução de testes com banco em memória
     @ Added [Dom 2013-09-01]
-  - Exibir gasto médio, máximo e mínimo de energia
-    @ Added [Sex 2013-08-30]
   - Exibição de informações da emulação
     @ Added [Qui 2013-08-29]
   - Regra de aplicação: Proximidade com o ponto de acesso
     @ Added [Sex 2013-08-30]
-  - Execução de múltiplas rodadas
-    @ Added [Dom 2013-09-01]
   - Monitoração ativa do nó pai
     @ Added [Sex 2013-08-30]
   - Calculo de intervalos de confiança
@@ -29,9 +33,11 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - requirements.txt
     @ Added [Sex 2013-08-30]
+  - Utilizar peewee diretamente ao invés do flask-peewee
+    @ Added [Seg 2013-09-02]
   - Caminho do projeto em MidletClass
     @ Added [Sáb 2013-08-31]
-  - Refactor da função util.solarium
+  - Refatorar da função util.solarium
     @ Added [Dom 2013-09-01]
   - Remover modelos específicos do projeto Rossan
     @ Added [Sex 2013-08-30]
