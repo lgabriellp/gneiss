@@ -4,8 +4,9 @@ import subprocess
 import threading
 from contextlib import contextmanager
 
+TEMPLATES_PATH = "/".join(__file__.split("/")[:-1] + ["templates"])
 
-renderer = pystache.Renderer(search_dirs="gneiss/templates")
+renderer = pystache.Renderer(search_dirs=TEMPLATES_PATH)
 
 
 def render(name, path, context):
