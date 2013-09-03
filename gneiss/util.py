@@ -9,9 +9,13 @@ TEMPLATES_PATH = "/".join(__file__.split("/")[:-1] + ["templates"])
 renderer = pystache.Renderer(search_dirs=TEMPLATES_PATH)
 
 
+def render_text(name, context):
+    return renderer.render_name(name, context)
+
+
 def render(name, path, context):
     rendered = open(path, "w")
-    rendered.write(renderer.render_name(name, context))
+    rendered.write(render_text(name, context))
     rendered.close()
 
 
