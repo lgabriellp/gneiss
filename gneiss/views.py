@@ -1,6 +1,8 @@
-from gneiss import app
+from flask import Blueprint
+
+stats = Blueprint("stats", __name__, static_folder="static")
 
 
-@app.route("/")
+@stats.route("/")
 def index():
     return "Gneiss"

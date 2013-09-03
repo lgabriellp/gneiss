@@ -3,13 +3,16 @@ import sys
 import peewee
 import random
 import datetime
-
 import peewee
 
-from gneiss import db, util
+from gneiss import proxy, util
+
+class BaseModel(peewee.Model):
+    class Meta:
+        database = proxy
 
 
-class Emulation(db.Model):
+class Emulation(BaseModel):
     number = peewee.IntegerField(primary_key=True)
     duration = peewee.IntegerField()
     interval = peewee.IntegerField()
@@ -85,7 +88,7 @@ class Emulation(db.Model):
         round.run()
 
 
-class Spot(db.Model):
+class Spot(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="spots")
     address = peewee.IntegerField()
     position = peewee.IntegerField()
@@ -134,13 +137,13 @@ class Spot(db.Model):
             Midlet.create(clas=classes[i], spot=self, number=i + 1)
 
 
-class MidletClass(db.Model):
+class MidletClass(BaseModel):
     id = peewee.PrimaryKeyField()
     path = peewee.CharField(unique=True)
     type = peewee.CharField()
 
 
-class Midlet(db.Model):
+class Midlet(BaseModel):
     clas = peewee.ForeignKeyField(MidletClass)
     spot = peewee.ForeignKeyField(Spot, related_name="midlets")
     number = peewee.IntegerField()
@@ -158,7 +161,7 @@ class Midlet(db.Model):
         return self.clas.path.split(".")[-1]
 
 
-class Round(db.Model):
+class Round(BaseModel):
     emulation = peewee.ForeignKeyField(Emulation, related_name="rounds")
     seed = peewee.IntegerField(default=lambda: random.randint(0, sys.maxint))
     date = peewee.DateTimeField(default=datetime.datetime.now)
@@ -231,7 +234,7 @@ class Round(db.Model):
             self.parse(solarium.stdout)
 
 
-class Cycle(db.Model):
+class Cycle(BaseModel):
     round = peewee.ForeignKeyField(Round, related_name="cycles")
     number = peewee.IntegerField()
 
@@ -250,7 +253,7 @@ class Cycle(db.Model):
         return row
 
 
-class SampledSpotCycle(db.Model):
+class SampledSpotCycle(BaseModel):
     cycle = peewee.ForeignKeyField(Cycle, related_name="samples")
     spot = peewee.ForeignKeyField(Spot, related_name="samples")
     parent = peewee.ForeignKeyField(Spot, null=True)
