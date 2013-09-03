@@ -33,8 +33,6 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - requirements.txt
     @ Added [Sex 2013-08-30]
-  - Utilizar peewee diretamente ao invés do flask-peewee
-    @ Added [Seg 2013-09-02]
   - Caminho do projeto em MidletClass
     @ Added [Sáb 2013-08-31]
   - Refatorar da função util.solarium
@@ -46,6 +44,9 @@ CURRENT TASKS:
 
 
 COMPLETED TASKS:
+  - Utilizar peewee diretamente ao invés do flask-peewee
+    @ Added [Seg 2013-09-02]
+    @ DONE [Ter 2013-09-03]
   - Path de templates independente do path do executável
     @ Added [Seg 2013-09-02]
     @ DONE [Seg 2013-09-02]

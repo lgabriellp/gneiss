@@ -5,7 +5,12 @@ import random
 import datetime
 import peewee
 
-from gneiss import proxy, util
+from gneiss import util
+from playhouse.proxy import Proxy
+
+
+proxy = Proxy()
+
 
 class BaseModel(peewee.Model):
     class Meta:
