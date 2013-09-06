@@ -9,23 +9,25 @@ from gneiss.models import SampledSpotCycle, Spot
 
 
 class EmulationTest(TestCase):
-    def create_app(self):
-        return App("gneiss.config.DebugConfig")
-
     def setUp(self):
+        self.app = App("gneiss.config.DebugConfig")
+        self.sensor_spot_number = 10
+
         models.create()
         MidletClass.create(path="br.ufrj.dcc.wsn.main.HeatSensorNode",
                            type="sensor")
         MidletClass.create(path="br.ufrj.dcc.wsn.main.BaseStation",
                            type="basestation")
-        self.emulation = Emulation.create(number=1,
-                                          duration=90,
-                                          interval=250,
-                                          density=.3,
-                                          basestation_spot_number=1,
-                                          sensor_spot_number=10,
-                                          max_sensors_in_spot=1,
-                                          behavior=0)
+        self.emulation = Emulation.create(
+            number=1,
+            duration=90,
+            interval=250,
+            density=.3,
+            basestation_spot_number=1,
+            sensor_spot_number=self.sensor_spot_number,
+            max_sensors_in_spot=1,
+            behavior=0
+        )
         self.emulation.add_spots()
         self.emulation.deploy("/home/lgabriel/Workspace/Rossan/")
 

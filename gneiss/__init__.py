@@ -17,6 +17,3 @@ def App(filename):
 
     application.register_blueprint(gneiss.views.stats)
     return application
-
-
-app = App("gneiss.config.ProductionConfig")
