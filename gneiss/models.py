@@ -18,7 +18,7 @@ class BaseModel(peewee.Model):
 
 
 class Emulation(BaseModel):
-    number = peewee.IntegerField(primary_key=True)
+    number = peewee.PrimaryKeyField()
     duration = peewee.IntegerField()
     interval = peewee.IntegerField()
     density = peewee.FloatField()
@@ -227,7 +227,7 @@ class Round(BaseModel):
 
             res = regex.search(line)
             if not res:
-                print line,
+                #print line,
                 continue
 
             self.add_sample(res.groupdict())
