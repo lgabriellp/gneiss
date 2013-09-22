@@ -1,7 +1,7 @@
 from flask import Flask
 
 
-def App(filename):
+def App(filename="gneiss.config.ProductionConfig"):
     application = Flask(__name__)
     application.config.from_object(filename)
 
