@@ -65,7 +65,11 @@ def solarium(context):
 
     try:
         yield ant
-    except:
+    except KeyboardInterrupt:
         timer.cancel()
         kill()
-        raise
+    except Exception as e:
+        timer.cancel()
+        kill()
+        print ">>>>>>>>>>>>>>", e, "<<<<<<<<<<<<<<<<<<<"
+        raise e
