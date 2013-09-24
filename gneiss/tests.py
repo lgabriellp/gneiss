@@ -9,41 +9,26 @@ from gneiss.models import SampledSpotCycle, Spot
 
 
 class EmulationTest(TestCase):
-    def setUp(self):
-        self.app = App("gneiss.config.DebugConfig")
-        self.sensor_spot_number = 10
+    @classmethod
+    def setUpClass(cls):
+        cls.app = App("gneiss.config.PersistentTesting")
+        if cls.app.config["CREATE_SCHEMA"]:
+            models.create()
 
-        models.create()
-        MidletClass.create(path="br.ufrj.dcc.wsn.main.HeatSensorNode",
-                           type="sensor")
-        MidletClass.create(path="br.ufrj.dcc.wsn.main.BaseStation",
-                           type="basestation")
+    def setUp(self):
         self.emulation = Emulation.create(
-            number=1,
-            duration=90,
-            interval=250,
-            density=.3,
+            duration=60,
+            interval=500,
+            density=.5,
             basestation_spot_number=1,
-            sensor_spot_number=self.sensor_spot_number,
+            sensor_spot_number=10,
             max_sensors_in_spot=1,
-            behavior=0
-        )
+            behavior=0)
         self.emulation.add_spots()
         self.emulation.deploy("/home/lgabriel/Workspace/Rossan/")
 
     def test_run(self):
         self.emulation.run()
 
-        assert Round.select().count() == 1
-        assert Cycle.select().count() > 0
-
-        samples = (SampledSpotCycle
-                   .select(SampledSpotCycle.cycle,
-                           fn.Count(fn.Distinct(SampledSpotCycle.spot)))
-                   .group_by(SampledSpotCycle.cycle)
-                   .tuples())
-        for cycle, spots in samples:
-            assert spots > 0
-
-    def tearDown(self):
-        models.drop()
+#    def tearDown(self):
+#        models.drop()

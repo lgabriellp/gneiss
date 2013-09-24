@@ -277,6 +277,11 @@ def create():
     Cycle.create_table()
     SampledSpotCycle.create_table()
 
+    MidletClass.create(path="br.ufrj.dcc.wsn.main.HeatSensorNode",
+                       type="sensor")
+    MidletClass.create(path="br.ufrj.dcc.wsn.main.BaseStation",
+                       type="basestation")
+
 
 def drop():
     SampledSpotCycle.drop_table()

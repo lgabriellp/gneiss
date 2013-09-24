@@ -1,19 +1,16 @@
+import peewee
 from flask import Flask
 
 
 def App(filename="gneiss.config.ProductionConfig"):
-    application = Flask(__name__)
-    application.config.from_object(filename)
+    app = Flask(__name__)
+    app.config.from_object(filename)
 
-    import peewee
     import gneiss.models
     import gneiss.views
 
-    if application.config["TESTING"]:
-        database = peewee.SqliteDatabase(":memory:")
-    else:
-        database = peewee.SqliteDatabase("emulation.db")
+    database = peewee.SqliteDatabase(app.config["DATABASE_URL"])
     gneiss.models.proxy.initialize(database)
 
-    application.register_blueprint(gneiss.views.stats)
-    return application
+    app.register_blueprint(gneiss.views.stats)
+    return app
