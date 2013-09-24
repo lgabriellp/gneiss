@@ -1,34 +1,24 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-  - Exibir gasto médio, máximo e mínimo de energia
-    @ Added [Sex 2013-08-30]
-  - Exibir gasto médio, máximo e mínimo de tempo
-    @ Added [Seg 2013-09-02]
-  - Exibir número de hops médio e máximo
-    @ Added [Seg 2013-09-02]
-  - Execução de múltiplas rodadas
-    @ Added [Dom 2013-09-01]
-  - Gráfico tempo de vida da rede
-    @ Added [Qui 2013-08-29]
-  - Verificar execução de testes com banco em memória
-    @ Added [Dom 2013-09-01]
-  - Exibição de informações da emulação
-    @ Added [Qui 2013-08-29]
   - Regra de aplicação: Proximidade com o ponto de acesso
     @ Added [Sex 2013-08-30]
-  - Monitoração ativa do nó pai
+  - Medir latência fim a fim
     @ Added [Sex 2013-08-30]
-  - Calculo de intervalos de confiança
-    @ Added [Dom 2013-09-01]
   - Simular Perda de pacotes
     @ Added [Sex 2013-08-30]
   - Medir taxa de entrega fim a fim
     @ Added [Sex 2013-08-30]
-  - Simular atraso na rede
-    @ Added [Sex 2013-08-30]
-  - Medir latência fim a fim
-    @ Added [Sex 2013-08-30]
+  - Monitoração ativa do nó pai
+    @ Added [Dom 2013-09-01]
+  - Execução de múltiplas rodadas
+    @ Added [Dom 2013-09-01]
+  - Calculo de intervalos de confiança
+    @ Added [Dom 2013-09-01]
+  - Gráfico tempo de vida da rede
+    @ Added [Qui 2013-08-29]
+  - Exibição de informações da emulação
+    @ Added [Qui 2013-08-29]
   - Documentação do código
     @ Added [Sex 2013-08-30]
   - requirements.txt
@@ -41,9 +31,20 @@ CURRENT TASKS:
     @ Added [Sex 2013-08-30]
   - Distribuição fácil (pip)
     @ Added [Sex 2013-08-30]
+  - Verificar execução de testes com banco em memória
+    @ Added [Dom 2013-09-01]
 
 
 COMPLETED TASKS:
+  - Exibir gasto médio, máximo e mínimo de energia
+    @ Added [Sex 2013-08-30]
+    @ DONE [Ter 2013-09-24]
+  - Exibir gasto médio, máximo e mínimo de tempo
+    @ Added [Seg 2013-09-02]
+    @ DONE [Ter 2013-09-24]
+  - Exibir número de hops médio e máximo
+    @ Added [Seg 2013-09-02]
+    @ DONE [Ter 2013-09-24] 
   - Utilizar peewee diretamente ao invés do flask-peewee
     @ Added [Seg 2013-09-02]
     @ DONE [Ter 2013-09-03]
